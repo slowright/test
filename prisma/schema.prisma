@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String        @unique   @id @default(uuid())
+  phone          String        @unique
+  email          String        @unique
+  password       String
+  discount       Float         @default(0)
+  refreshToken   RefreshToken[]
+}
+
+model UnVerificationUser {
+  id             String        @unique   @id @default(uuid())
+  phone          String        @unique
+  email          String        @unique
+  password       String        
+  code           String        
+}
+
+
+model RefreshToken {
+  id           String @unique   @id @default(uuid())
+  refreshToken String @unique
+  userId       String    
+  user         User   @relation(fields: [userId], references: [id])
+  createdAt DateTime  @default(now())
+}
